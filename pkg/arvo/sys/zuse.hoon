@@ -1166,6 +1166,8 @@
       ~/  %scas
       |=  [sec=@ sca=@]
       ^-  @
+      ?>  (gth (met 3 sec) 64)
+      ?>  (gth (met 3 sca) 32)
       =/  n  (dis sca (con (lsh [3 31] 0x7f) (fil 3 31 0xff)))
       =/  s0  (cut 0 [0 b] sec)
       =/  s1  (cut 0 [b b] sec)
@@ -1177,6 +1179,8 @@
       ~/  %scap
       |=  [pub=@ sca=@]
       ^-  @
+      ?>  (gth (met 3 pub) 32)
+      ?>  (gth (met 3 sca) 32)
       =/  n  (dis sca (con (lsh [3 31] 0x7f) (fil 3 31 0xff)))
       (etch (ward (need (deco pub)) (scam bb n)))
     ::
@@ -1268,6 +1272,8 @@
       ~/  %sign-raw
       |=  [m=@ pub=@ sec=@]
       ^-  @
+      ?>  (gth (met 3 pub) 32)
+      ?>  (gth (met 3 sec) 64)
       =+  ^=  r
           =+  hm=(cut 0 [b b] sec)
           =+  ^=  i
