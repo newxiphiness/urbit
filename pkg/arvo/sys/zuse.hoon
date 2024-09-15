@@ -1208,19 +1208,6 @@
           (lsh [0 3] (cut 0 [3 (sub b 5)] h))
       =+  aa=(scam bb a)
       (etch aa)
-    ::
-    ++  luck
-      ~/  %luck
-      |=  sk=@I
-      ^-  [pub=@ sec=@]
-      ?:  (gth (met 3 sk) 32)  !!
-      =+  h=(shal (rsh [0 3] b) sk)
-      =+  ^=  a
-          %+  add
-            (bex (sub b 2))
-          (lsh [0 3] (cut 0 [3 (sub b 5)] h))
-      =+  aa=(scam bb a)
-      (etch aa)
     ::                                                  ::  ++suck:ed:crypto
     ++  suck                                            ::  keypair from seed
       |=  se=@I  ^-  @uJ
