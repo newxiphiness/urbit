@@ -1154,10 +1154,61 @@
       %+  ward
         (scam a-point-decoded a)
       (scam b-point-decoded b)
+  
+    ::
+    ++  scad
+      ~/  %scad
+      |=  [pub=@ sec=@ sca=@]
+      ^-  [pub=@ sec=@]
+      [(scap pub sca) (scas sec sca)]
+    ::
+    ++  scas
+      ~/  %scas
+      |=  [sec=@ sca=@]
+      ^-  @
+      =/  n  (dis sca (con (lsh [3 31] 0x7f) (fil 3 31 0xff)))
+      =/  s0  (cut 0 [0 b] sec)
+      =/  s1  (cut 0 [b b] sec)
+      =/  ns0  (~(sit fo l) (add s0 n))
+      =/  ns1  (shal 64 (can 0 ~[[b s1] [b sca]]))
+      (can 0 ~[[b ns0] [b ns1]])
+    ::
+    ++  scap
+      ~/  %scap
+      |=  [pub=@ sca=@]
+      ^-  @
+      =/  n  (dis sca (con (lsh [3 31] 0x7f) (fil 3 31 0xff)))
+      (etch (ward (need (deco pub)) (scam bb n)))
+    ::
+    ++  luck
+      ~/  %luck
+      |=  sk=@I
+      ^-  [pub=@ sec=@]
+      ?:  (gth (met 3 sk) 32)  !!
+      =+  h=(shal (rsh [0 3] b) sk)
+      =+  ^=  a
+          %+  add
+            (bex (sub b 2))
+          (lsh [0 3] (cut 0 [3 (sub b 5)] h))
+      =+  aa=(scam bb a)
+      [(etch aa) (can 0 ~[[b a] [b (cut 0 [b b] h)]])]
     ::                                                  ::  ++puck:ed:crypto
     ++  puck                                            ::  public key
       ~/  %puck
       |=  sk=@I  ^-  @
+      ?:  (gth (met 3 sk) 32)  !!
+      =+  h=(shal (rsh [0 3] b) sk)
+      =+  ^=  a
+          %+  add
+            (bex (sub b 2))
+          (lsh [0 3] (cut 0 [3 (sub b 5)] h))
+      =+  aa=(scam bb a)
+      (etch aa)
+    ::
+    ++  luck
+      ~/  %luck
+      |=  sk=@I
+      ^-  [pub=@ sec=@]
       ?:  (gth (met 3 sk) 32)  !!
       =+  h=(shal (rsh [0 3] b) sk)
       =+  ^=  a
@@ -1211,6 +1262,30 @@
                   [(met 0 m) m]
               ==
           (~(sit fo l) (add r (mul (shaz ha) a)))
+      (can 0 ~[[b (etch rr)] [b ss]])
+    ::
+    ++  sign-raw
+      ~/  %sign-raw
+      |=  [m=@ pub=@ sec=@]
+      ^-  @
+      =+  ^=  r
+          =+  hm=(cut 0 [b b] sec)
+          =+  ^=  i
+              %+  can  0
+              :~  [b hm]
+                  [(met 0 m) m]
+              ==
+          (shaz i)
+      =+  rr=(scam bb r)
+      =+  ^=  ss
+          =+  er=(etch rr)
+          =+  ^=  ha
+              %+  can  0
+              :~  [b er]
+                  [b pub]
+                  [(met 0 m) m]
+              ==
+          (~(sit fo l) (add r (mul (shaz ha) (cut 0 [0 b] sec))))
       (can 0 ~[[b (etch rr)] [b ss]])
     ::                                                  ::  ++veri:ed:crypto
     ++  veri                                            ::  validate
