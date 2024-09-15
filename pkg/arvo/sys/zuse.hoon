@@ -1188,7 +1188,7 @@
       ~/  %luck
       |=  sk=@I
       ^-  [pub=@ sec=@]
-      ?:  (gth (met 3 sk) 32)  !!
+      ?>  (gth (met 3 sk) 32)
       =+  h=(shal (rsh [0 3] b) sk)
       =+  ^=  a
           %+  add
