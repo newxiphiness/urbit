@@ -112,7 +112,7 @@
         =+  l=(luck:ed s)
         ..nu(+< [%| pub=[cry=(puck:ed c) sgn=pub.l ~] sek=[cry=c sgn=sec.l sed=s ~]])
       ::
-      ++  tit                                           ::  create keypair
+      ++  wit                                           ::  create keypair
         |=  [w=@ seed=@ tw=@]
         ^+  ..nu
         =+  wid=(add (div w 8) ?:(=((mod w 8) 0) 0 1))
@@ -153,7 +153,7 @@
       ::  make acru cores
       ::
 
-      =/  ali      (tit:nu:crub 512 (shaz 'Alice')) ::(shax 'tweak'))
+      =/  ali      (tit:nu:crub 512 (shaz 'alice')) ::(shax 'tweak'))
       =/  ali-pub  (com:nu:crub pub:ex.ali)
       =/  bob      (pit:nu:crub 512 (shaz 'Robert') (shax 'tweak'))
       =/  bob-pub  (com:nu:crub pub:ex.bob)
