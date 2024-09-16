@@ -134,7 +134,7 @@
         ~|  %not-crub-seckey  ?>  =('T' mag)
         =+  [c=(rsh 8 bod) s=(cut 8 [1 1] bod) d=(rsh [8 2] bod)]
         =+  l=(luck:ed s)
-        =+  tl=(scad:ed pub.l sec.l (shax d))
+        =+  tl=(scad:ed pub.l sec.l (shax (jam pub.l d)))
         ..nu(+< [%| pub=[cry=(puck:ed c) sgn=pub.l ~] sek=[cry=c sgn=sec.l sed=s ~]])
         ::..nu(+< [%& pub=[cry=(puck:ed c) sgn=pub.l ~] sek=[cry=c sgn=sec.l sed=s ~]])
       ::                                                ::  ++com:nu:crub:crypto
