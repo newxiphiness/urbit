@@ -1,4 +1,5 @@
 =,  crypto
+=<  crub
 |%
 ++  crub
   ::!:
@@ -6,10 +7,11 @@
   ::todo: because of rekeying, maybe we just have a whole separate field for
   ::original keys + tweak
   |_  $%  [tw=%| pub=[cry=@ sgn=@ ~] sek=$@(~ [cry=@ sgn=@ sed=@ ~])]
-          $:  tw=%&  pub=[cry=@ sgn=@ unsgn=@ sig=@ unsig=@ dat=@]
+          $:  tw=%&  pub=[cry=@ sgn=@ unsgn=@ dat=@]
               sek=$@(~ [cry=@ sgn=@ sed=@ unsgn=@])
           ==
       ==
+  +*  sam  +>
   ::                                                  ::  ++as:crub:crypto
   ++  as                                              ::
     |%
@@ -97,7 +99,15 @@
     ++  sec                                           ::  private key
       ^-  ring
       ?~  sek  ~|  %pubkey-only  !!
-      (cat 3 'B' (cat 8 sgn.sek cry.sek))
+      =/  sam  +<:..nu
+      ?:  ?=(%& -.sam)
+        %^  cat  3  'T'
+        %+  can  8
+        :~  [1 cry.sek.sam]
+            [1 sed.sek.sam]
+            [(met 8 dat.pub.sam) dat.pub.sam]
+        ==
+      (cat 3 'B' (cat 8 sed.sek cry.sek))
     --  ::ex
   ::                                                  ::  ++nu:crub:crypto
   ++  nu                                              ::
@@ -119,8 +129,12 @@
       =+  bits=(shal wid seed)
       =+  [c=(rsh 8 bits) s=(end 8 bits)]
       =+  l=(luck:ed s)
-      =+  tl=(scad:ed pub.l sec.l (shax tw)) 
-      ..nu(+< [%| pub=[cry=(puck:ed c) sgn=pub.tl ~] sek=[cry=c sgn=sec.tl sed=s ~]])
+      =+  tl=(scad:ed pub.l sec.l (shax (can 0 ~[32^pub.l (met 0 tw)^tw])))
+      =-  ..nu(+< -)
+      :*  tw=%&  pub=[cry=(puck:ed c) sgn=pub.tl unsgn=pub.l dat=tw]
+          sek=[cry=c sgn=sec.tl sed=s unsgn=sec.l]
+          :: sek=$@(~ [cry=@ sgn=@ sed=@ unsgn=@])
+      ==
     ::                                                ::  ++nol:nu:crub:crypto
     ++  nol                                           ::  activate secret
       |=  a=ring
@@ -132,11 +146,13 @@
         ..nu(+< [%| pub=[cry=(puck:ed c) sgn=pub.l ~] sek=[cry=c sgn=sec.l sed=s ~]])
       ::  todo: not proper tweak
       ~|  %not-crub-seckey  ?>  =('T' mag)
-      =+  [c=(rsh 8 bod) s=(cut 8 [1 1] bod) d=(rsh [8 2] bod)]
+      =+  [c=(cut 8 [0 1] bod) s=(cut 8 [1 1] bod) d=(rsh [8 2] bod)]
       =+  l=(luck:ed s)
-      =+  tl=(scad:ed pub.l sec.l (shax d))
-      ..nu(+< [%| pub=[cry=(puck:ed c) sgn=pub.l ~] sek=[cry=c sgn=sec.l sed=s ~]])
-      ::..nu(+< [%& pub=[cry=(puck:ed c) sgn=pub.l ~] sek=[cry=c sgn=sec.l sed=s ~]])
+      =+  tl=(scad:ed pub.l sec.l (shax (can 0 ~[32^pub.l (met 0 d)^d])))
+      =-  ..nu(+< -)
+      :*  tw=%&  pub=[cry=(puck:ed c) sgn=pub.tl unsgn=pub.l dat=d]
+          sek=[cry=c sgn=sec.tl sed=s unsgn=sec.l]
+      ==
     ::                                                ::  ++com:nu:crub:crypto
     ++  com                                           ::  activate public
       |=  a=pass
@@ -184,25 +200,17 @@
   |=  eny=@uxI
   ^-  hoop
   :: ?>  =(512 (met 0 eny))
-  ~&  test/`@ux`(cat 3 1 eny)
   =/  chain=@ux
     (sha256 root-key (cat 3 eny 1))
-    ~&  chain/chain
   =/  ext  (hmac-sha512:hmac root-key eny)
-  ~&  ext/`@ux`ext
   =/  [sin=@uxI dex=@uxI]   [(rsh [3 32] ext) (end [3 32] ext)]
-  ~&  sin/sin
-  ~&  dex/dex
   =/  sine  (rip 3 sin)
-  ~&  sine/`(list @ub)`sine
   =/  match  (dis 0b10.0000 (snag 0 sine))
-  ~&  match/`@ub`match
   ?.  =(0 match)
     ~|  weird-root/sine
     !!
   =.  sine  (snoc (snip sine) (dis 0b1111.1000 (rear sine)))
   =.  sine  (snap sine 0 (con 0b100.0000 (dis 0b111.1111 (snag 0 sine))))
-  ~&  `@ux`(rep 3 sine)
   [(rep 3 sine) dex chain]
   ++  heir
   |=  [=fling i=@]
@@ -233,13 +241,9 @@
     =/  zed
       %-  hmuc
       ?:  (lth i (bex 31))
-        =-  ~&(inner/- -)
         (cat 3 2 (cat 5 pub i))
       (cat 5 (cat 3 0 (cat 3 sin.hoop dex.hoop)) 0)
-    ~&  zed/`@ux`zed
     =/  [sinz=@uxI dexz=@uxI]  [(cut 3 [0 28] zed) (end [3 32] zed)]
-    ~&  sinz/sinz
-    ~&  dexz/dexz
     :+  (sum:fo (pro:fo 8 sinz) sin.hoop)  (sum:fo dexz dex.hoop)
     %-  hmuc
     ?:  (lth i (bex 31))
