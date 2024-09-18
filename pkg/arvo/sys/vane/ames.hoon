@@ -266,12 +266,15 @@
   |=  [=public-key =private-key]
   ^-  symmetric-key
   ::
-  ?>  =('b' (end 3 public-key))
-  =.  public-key  (rsh 8 (rsh 3 public-key))
+  =.  public-key
+    ?>  =('b' (end 3 public-key))
+    (rsh 8 (rsh 3 public-key))
   ::
-  ?>  =('B' (end 3 private-key))
-  =.  private-key  (rsh 8 (rsh 3 private-key))
-  ::
+  =.  private-key
+    ?:  =('B' (end 3 private-key))
+      (rsh 8 (rsh 3 private-key))
+    ?>  =('T' (end 3 private-key))
+    (end 8 (rsh 3 private-key))
   `@`(shar:ed:crypto public-key private-key)
 ::  +encode-keys-packet: create key request $packet
 ::

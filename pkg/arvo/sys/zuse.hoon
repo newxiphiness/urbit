@@ -1505,12 +1505,17 @@
       (hsh p s 16.384 8 1 256)
     --  ::scr
   ::                                                    ::
+  +$  crab  
+    $%  [%| pub=[cry=@ sgn=@ ~] sek=$@(~ [cry=@ sgn=@ sed=@ ~])]
+        [%& pub=[cry=@ sgn=@ unsgn=@ dat=@] sek=$@(~ [cry=@ sgn=@ sed=@ unsgn=@])]
+    ==
+  ::                                                    ::
   ::::                    ++crub:crypto                 ::  (2b4) suite B, Ed
     ::                                                  ::::
   ++  crub  !:
     ^-  acru
-    =|  [pub=[cry=@ sgn=@] sek=(unit [cry=@ sgn=@])]
-    |%
+    |_  crab
+    +*  cab  +>
     ::                                                  ::  ++as:crub:crypto
     ++  as                                              ::
       |%
@@ -1524,7 +1529,7 @@
         |=  msg=@
         ^-  @ux
         ?~  sek  ~|  %pubkey-only  !!
-        (sign:ed msg sgn.u.sek)
+        (sign-raw:ed msg sgn.pub sgn.sek)
       ::                                                ::  ++sure:as:crub:
       ++  sure                                          ::
         |=  txt=@
@@ -1544,7 +1549,7 @@
         ?~  sek  ~|  %pubkey-only  !!
         ?>  =('b' (end 3 bpk))
         =+  pk=(rsh 8 (rsh 3 bpk))
-        =+  shar=(shax (shar:ed pk cry.u.sek))
+        =+  shar=(shax (shar:ed pk cry.sek))
         =+  smsg=(sign msg)
         (jam (~(en siva:aes shar ~) smsg))
       ::                                                ::  ++tear:as:crub:
@@ -1554,7 +1559,7 @@
         ?~  sek  ~|  %pubkey-only  !!
         ?>  =('b' (end 3 bpk))
         =+  pk=(rsh 8 (rsh 3 bpk))
-        =+  shar=(shax (shar:ed pk cry.u.sek))
+        =+  shar=(shax (shar:ed pk cry.sek))
         =+  ;;([iv=@ len=@ cph=@] (cue txt))
         =+  try=(~(de siva:aes shar ~) iv len cph)
         ?~  try  ~
@@ -1598,7 +1603,15 @@
       ++  sec                                           ::  private key
         ^-  ring
         ?~  sek  ~|  %pubkey-only  !!
-        (cat 3 'B' (cat 8 sgn.u.sek cry.u.sek))
+        =/  sam  +<:..nu
+        ?:  ?=(%& -.sam)
+          %^  cat  3  'T'
+          %+  can  8
+          :~  [1 cry.sek.sam]
+              [1 sed.sek.sam]
+              [(met 8 dat.pub.sam) dat.pub.sam]
+          ==
+        (cat 3 'B' (cat 8 sed.sek cry.sek))
       --  ::ex
     ::                                                  ::  ++nu:crub:crypto
     ++  nu                                              ::
@@ -1609,20 +1622,31 @@
         =+  wid=(add (div w 8) ?:(=((mod w 8) 0) 0 1))
         =+  bits=(shal wid seed)
         =+  [c=(rsh 8 bits) s=(end 8 bits)]
-        ..nu(pub [cry=(puck:ed c) sgn=(puck:ed s)], sek `[cry=c sgn=s])
+        ..nu(+< [%| pub=[cry=(puck:ed c) sgn=(puck:ed s) ~] sek=[cry=c sgn=s sed=s ~]])
       ::                                                ::  ++nol:nu:crub:crypto
       ++  nol                                           ::  activate secret
         |=  a=ring
+        ^+  ..nu
         =+  [mag=(end 3 a) bod=(rsh 3 a)]
-        ~|  %not-crub-seckey  ?>  =('B' mag)
-        =+  [c=(rsh 8 bod) s=(end 8 bod)]
-        ..nu(pub [cry=(puck:ed c) sgn=(puck:ed s)], sek `[cry=c sgn=s])
+        ?:  =('B' mag)
+          =+  [c=(rsh 8 bod) s=(end 8 bod)]
+          =+  l=(luck:ed s)
+          ..nu(+< [%| pub=[cry=(puck:ed c) sgn=pub.l ~] sek=[cry=c sgn=sec.l sed=s ~]])
+        ::  todo: not proper tweak
+        ~|  %not-crub-seckey  ?>  =('T' mag)
+        =+  [c=(cut 8 [0 1] bod) s=(cut 8 [1 1] bod) d=(rsh [8 2] bod)]
+        ~|  s/s
+        =+  l=(luck:ed s)
+        =+  tl=(scad:ed pub.l sec.l (shax (can 0 ~[32^pub.l (met 0 d)^d])))
+        =-  ..nu(+< -)
+        :+  tw=%&  pub=[cry=(puck:ed c) sgn=pub.tl unsgn=pub.l dat=d]
+        sek=[cry=c sgn=sec.tl sed=s unsgn=sec.l]
       ::                                                ::  ++com:nu:crub:crypto
       ++  com                                           ::  activate public
         |=  a=pass
         =+  [mag=(end 3 a) bod=(rsh 3 a)]
         ~|  %not-crub-pubkey  ?>  =('b' mag)
-        ..nu(pub [cry=(rsh 8 bod) sgn=(end 8 bod)], sek ~)
+        ..nu(+< [%| pub=[cry=(rsh 8 bod) sgn=(end 8 bod) ~] sek=~])
       --  ::nu
     --  ::crub
   ::                                                    ::
