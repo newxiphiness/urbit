@@ -1166,8 +1166,8 @@
       ~/  %scas
       |=  [sec=@ sca=@]
       ^-  @
-      ?>  (gth (met 3 sec) 64)
-      ?>  (gth (met 3 sca) 32)
+      ?>  (lte (met 3 sec) 64)
+      ?>  (lte (met 3 sca) 32)
       =/  n  (dis sca (con (lsh [3 31] 0x7f) (fil 3 31 0xff)))
       =/  s0  (cut 0 [0 b] sec)
       =/  s1  (cut 0 [b b] sec)
@@ -1179,8 +1179,8 @@
       ~/  %scap
       |=  [pub=@ sca=@]
       ^-  @
-      ?>  (gth (met 3 pub) 32)
-      ?>  (gth (met 3 sca) 32)
+      ?>  (lte (met 3 pub) 32)
+      ?>  (lte (met 3 sca) 32)
       =/  n  (dis sca (con (lsh [3 31] 0x7f) (fil 3 31 0xff)))
       (etch (ward (need (deco pub)) (scam bb n)))
     ::
@@ -1188,7 +1188,7 @@
       ~/  %luck
       |=  sk=@I
       ^-  [pub=@ sec=@]
-      ?>  (gth (met 3 sk) 32)
+      ?>  (lte (met 3 sk) 32)
       =+  h=(shal (rsh [0 3] b) sk)
       =+  ^=  a
           %+  add
@@ -1222,6 +1222,7 @@
       =.  exp  (dis exp (can 0 ~[[3 0] [251 (fil 0 251 1)]]))
       =.  exp  (con exp (lsh [3 31] 0b100.0000))
       =+  prv=(end 8 exp)
+      =.  pub  +:(need (deco pub))
       =+  crv=(fra.fq (sum.fq 1 pub) (dif.fq 1 pub))
       (curt prv crv)
     ::                                                  ::  ++sign:ed:crypto
@@ -1259,8 +1260,8 @@
       ~/  %sign-raw
       |=  [m=@ pub=@ sec=@]
       ^-  @
-      ?>  (gth (met 3 pub) 32)
-      ?>  (gth (met 3 sec) 64)
+      ?>  (gte (met 3 pub) 32)
+      ?>  (gte (met 3 sec) 64)
       =+  ^=  r
           =+  hm=(cut 0 [b b] sec)
           =+  ^=  i
